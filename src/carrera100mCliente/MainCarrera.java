@@ -14,6 +14,7 @@ public class MainCarrera {
 
 	static Semaphore sem_salida = new Semaphore(4);
 	static Semaphore sem_llegada = new Semaphore(4);
+	
 
 	public static void main(String[] args) {
 

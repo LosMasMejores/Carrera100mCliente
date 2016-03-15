@@ -12,9 +12,11 @@ public class Atleta extends Thread {
 
 	int dorsal;
 	
+	
 	public Atleta(int dorsal) {
 		this.dorsal = dorsal;
 	}
+	
 	
 	public void run() {
 		Client client = ClientBuilder.newClient();
@@ -48,4 +50,5 @@ public class Atleta extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
 }
