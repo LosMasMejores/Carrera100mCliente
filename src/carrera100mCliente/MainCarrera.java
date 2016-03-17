@@ -1,6 +1,7 @@
 package carrera100mCliente;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
@@ -12,16 +13,29 @@ import javax.ws.rs.core.UriBuilder;
 
 public class MainCarrera {
 
-	static Semaphore sem_salida = new Semaphore(4);
-	static Semaphore sem_llegada = new Semaphore(4);
-	
-
 	public static void main(String[] args) {
 
-		Atleta atleta_1 = new Atleta(1);
-		Atleta atleta_2 = new Atleta(2);
-		Atleta atleta_3 = new Atleta(3);
-		Atleta atleta_4 = new Atleta(4);
+		int num_atletas = 4;
+		Semaphore sem_salida;
+		Semaphore sem_llegada;
+		ArrayList<Atleta> atletas = new ArrayList<>();
+		
+		sem_salida = new Semaphore(num_atletas);
+		sem_llegada = new Semaphore(num_atletas);
+		
+		if (args.length > 1) {
+			return;
+		}
+		if (args.length == 1) {
+			num_atletas = Integer.parseInt(args[0]);
+			if (num_atletas <= 0){
+				return;
+			}
+		}
+		
+		for (int i = 0; i < num_atletas; i++) {
+			atletas.add(new Atleta(i+1, sem_salida, sem_llegada));
+		}
 		
 		Client client = ClientBuilder.newClient();
 		URI uri = UriBuilder.fromUri("http://localhost:8080/Carrera100mServidor").build();
@@ -35,10 +49,9 @@ public class MainCarrera {
 		try {
 			sem_llegada.acquire(4);
 			sem_salida.acquire(4);
-			atleta_1.start();
-			atleta_2.start();
-			atleta_3.start();
-			atleta_4.start();
+			for (int i = 0; i < num_atletas; i++) {
+				atletas.get(i).start();
+			}
 			sem_salida.release(4);
 			sem_llegada.acquire(4);
 			
