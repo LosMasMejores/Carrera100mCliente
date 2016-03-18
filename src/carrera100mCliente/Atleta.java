@@ -29,28 +29,28 @@ public class Atleta extends Thread {
 		WebTarget target = client.target(uri);
 		
 		try {
-			this.sem_salida.acquire();
+			this.sem_salida.acquire(); // Esperar por MainCarrera
 			
 			System.out.println(target.path("carrera100")
 					.path("preparado")
 					.request(MediaType.TEXT_PLAIN)
-					.get(String.class));
+					.get(String.class)); // Llamar al servicio /preparado
 			
 			System.out.println(target
 					.path("carrera100")
 					.path("listo")
 					.request(MediaType.TEXT_PLAIN)
-					.get(String.class));
+					.get(String.class)); // Llamar al servicio /listo
 
-			Thread.sleep((long)(Math.random() * 2200 + 9560));
+			Thread.sleep((long)(Math.random() * 2200 + 9560)); // Correr
 			
-			System.out.println(target.path("carrera100")
+			System.out.println(this.dorsal + " he tardado " + target.path("carrera100")
 					.path("llegada")
 					.queryParam("dorsal", "" + this.dorsal)
 					.request(MediaType.TEXT_PLAIN)
-					.get(String.class));
+					.get(String.class)); // Llamar al servicio /llegada con nuestro dorsal
 			
-			this.sem_llegada.release();
+			this.sem_llegada.release(); // Avisar a MainCarrera
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
