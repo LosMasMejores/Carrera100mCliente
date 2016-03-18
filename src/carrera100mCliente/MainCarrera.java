@@ -20,9 +20,7 @@ public class MainCarrera {
 		Semaphore sem_llegada;
 		ArrayList<Atleta> atletas = new ArrayList<>();
 		
-		sem_salida = new Semaphore(num_atletas);
-		sem_llegada = new Semaphore(num_atletas);
-		
+
 		if (args.length > 1) {
 			return;
 		}
@@ -32,6 +30,9 @@ public class MainCarrera {
 				return;
 			}
 		}
+		
+		sem_salida = new Semaphore(num_atletas);
+		sem_llegada = new Semaphore(num_atletas);
 		
 		for (int i = 0; i < num_atletas; i++) {
 			atletas.add(new Atleta(i+1, sem_salida, sem_llegada));
@@ -47,13 +48,13 @@ public class MainCarrera {
 				.get(String.class));
 		
 		try {
-			sem_llegada.acquire(4);
-			sem_salida.acquire(4);
+			sem_llegada.acquire(num_atletas);
+			sem_salida.acquire(num_atletas);
 			for (int i = 0; i < num_atletas; i++) {
 				atletas.get(i).start();
 			}
-			sem_salida.release(4);
-			sem_llegada.acquire(4);
+			sem_salida.release(num_atletas);
+			sem_llegada.acquire(num_atletas);
 			
 			Resultado resultado = target.path("carrera100")
 					.path("resultados")
